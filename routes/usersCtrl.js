@@ -1,6 +1,7 @@
 // IMPORTS des pasckages npm que l'ont va use
 
 let bcrypt = require("bcrypt");
+let asyncLib = require('async')
 
 // IMPORTS des pasckages que l'ont va use via dossier
 
@@ -128,11 +129,13 @@ module.exports = {
   },// LOGIN OK.
 
   // on cree une FONCTION READ PROFIL
-  useProfil: (request,response) => {
+  getUserProfil: (request,response) => {
 
     let headerAuth = request.headers['authorization']
 
     let userId = jwtUtils.getUserId(headerAuth)
+
+    
 
     if(userId < 0) {
       return response.status(400).json({'error':'An error occured mauvais token'})
@@ -156,7 +159,52 @@ module.exports = {
       return response.status(500).json({'error':'user not fetch'})
     })
 
-  },//-------------
+  },// READ PROFIL OK.
 
-  // on cree une FONCTION DELETE PROFIL
-};
+  // on cree une FONCTION UPDATE PROFIL
+  updateUserProfile: (request,response)=>{
+    
+    let headerAuth  = request.headers['authorization'];
+    let userId      = jwtUtils.getUserId(headerAuth);
+
+    let nom = request.body.nom;
+    let prenom = request.body.prenom;
+    let email = request.body.email;
+
+    asyncLib.waterfall([
+      (done) => {
+        models.User.findOne({
+          attributes: ['id', 'nom','prenom','email'],
+          where: { id: userId }
+        }).then( (userFound) => {
+          done(null, userFound);
+        })
+        .catch((err) => {
+          return response.status(500).json({ 'error': 'unable to verify user' });
+        });
+      },
+      (userFound, done) => {
+        if(userFound) {
+          userFound.update({
+            nom: (nom ? nom : userFound.nom),
+            prenom: (prenom ? prenom : userFound.prenom),
+            email: (email ? email : userFound.email),
+          }).then(() => {
+            done(userFound);
+          }).catch((err) => {
+            response.status(500).json({ 'error': 'cannot update user' });
+          });
+        } else {
+          response.status(404).json({ 'error': 'user not found' });
+        }
+      },
+    ], (userFound) => {
+      if (userFound) {
+        return response.status(201).json(userFound);
+      } else {
+        return response.status(500).json({ 'error': 'cannot update user profile' });
+      }
+    });
+  }// UPDATE PROFIL OK.
+
+};//-- exxports end ---

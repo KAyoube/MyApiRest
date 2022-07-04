@@ -13,7 +13,8 @@ exports.router = (() => {
     // Users route
     apiRouter.route('/users/register/').post(usersCtrl.register)
     apiRouter.route('/users/login/').post(usersCtrl.login)
-    apiRouter.route('/users/me/').get(usersCtrl.useProfil)
+    apiRouter.route('/users/me/').get(usersCtrl.getUserProfil)
+    apiRouter.route('/users/me/').put(usersCtrl.updateUserProfile)
 
     return apiRouter;
 })();
