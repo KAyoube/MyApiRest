@@ -127,16 +127,35 @@ module.exports = {
     
   },// LOGIN OK.
 
-  // on cree une FONCTION UPDATE PROFIL
-  updateProfil: () => {
-    // on recupere les infos users qui peuvent etre modifié
-    let nom = request.body.nom;
-    let prenom = request.body.prenom;
-    let email = request.body.email;
+  // on cree une FONCTION READ PROFIL
+  useProfil: (request,response) => {
 
-    // tcheck si les
+    let headerAuth = request.headers['authorization']
 
-    
+    let userId = jwtUtils.getUserId(headerAuth)
+
+    if(userId < 0) {
+      return response.status(400).json({'error':'An error occured mauvais token'})
+    }
+
+    models.User.findOne({
+      attributes:['id','nom','prenom','email'],
+      where:{id:userId}
+    })
+    .then((user) => {
+      if(user){
+
+        return response.status(201).json(user)
+
+      } else {
+
+        return response.status(400).json({'error':'AN error occured'})
+      }
+    })
+    .catch((err) => {
+      return response.status(500).json({'error':'user not fetch'})
+    })
+
   },//-------------
 
   // on cree une FONCTION DELETE PROFIL

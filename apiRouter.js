@@ -2,7 +2,7 @@
 
 let express= require('express')
 
-// Imports via dossiers
+// Imports des packages via dossiers
 
 let usersCtrl = require('./routes/usersCtrl')
 
@@ -13,6 +13,7 @@ exports.router = (() => {
     // Users route
     apiRouter.route('/users/register/').post(usersCtrl.register)
     apiRouter.route('/users/login/').post(usersCtrl.login)
+    apiRouter.route('/users/me/').get(usersCtrl.useProfil)
 
     return apiRouter;
 })();

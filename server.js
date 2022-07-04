@@ -23,7 +23,7 @@ server.get('/',(request,response) => {
 server.use('/api/',apiRouter)
 
 
-// PORT
+// PORT du localhost
 
 server.listen(8092,()=>{
     console.log('Serveur en marche maitre');
