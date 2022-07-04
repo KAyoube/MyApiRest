@@ -1,5 +1,5 @@
 'use strict';
-
+// // IMPORTS des pasckages que l'ont va use
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');

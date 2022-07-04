@@ -1,9 +1,10 @@
-// IMPORTS 
+// IMPORTS des pasckages npm que l'ont va use
 let express = require('express')
 let bodyParser = require('body-parser')
 
-// imports via dossier
-let apiRouter = require('./apiRouter')
+
+// IMPORTS des pasckages que l'ont va use via dossier
+let apiRouter = require('./apiRouter').router
 
 //---
 let server = express()
@@ -19,7 +20,7 @@ server.get('/',(request,response) => {
 })
 
 // Router API
-//server.use('/api/',apiRouter)
+server.use('/api/',apiRouter)
 
 
 // PORT
